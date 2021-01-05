@@ -26,6 +26,9 @@
   },
   "homepage": "https://github.com/chris-rudmin/serial-websub-scale#readme",
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-loader": "^8.2.2",
     "webpack": "^5.11.1"
   }
 }
