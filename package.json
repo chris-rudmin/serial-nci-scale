@@ -1,11 +1,15 @@
 {
   "name": "serial-webusb-scale",
   "version": "0.0.1",
+  "private": true,
   "description": "WebUSB interface for Salter Brecknell PS-USB scales",
   "main": "dist/serial-webusb-scale.js",
   "scripts": {
-    "test": "test",
-    "build": "babel src/serial-webusb-scale.js -o dist/serial-webusb-scale.js"
+    "build-dist": "npx babel --presets @babel/preset-env src/serial-webusb-scale.js -o dist/serial-webusb-scale.js",
+    "start": "react-scripts start",
+    "build-example": "react-scripts build && mv build docs",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -25,19 +29,34 @@
   "bugs": {
     "url": "https://github.com/chris-rudmin/serial-websub-scale/issues"
   },
-  "homepage": "https://github.com/chris-rudmin/serial-websub-scale#readme",
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "babel-loader": "^8.2.2",
-    "webpack": "^5.11.1",
-    "webpack-cli": "^4.3.1"
+    "@testing-library/jest-dom": "^5.11.8",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.6.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.1",
+    "web-vitals": "^0.2.4"
   },
   "dependencies": {
     "web-serial-polyfill": "^1.0.6"
   },
-  "babel": {
-    "presets": ["@babel/preset-env"]
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
