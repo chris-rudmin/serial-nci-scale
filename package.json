@@ -2,9 +2,10 @@
   "name": "serial-webusb-scale",
   "version": "0.0.1",
   "description": "WebUSB interface for Salter Brecknell PS-USB scales",
-  "main": "src/index.js",
+  "main": "dist/serial-webusb-scale.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "babel src/serial-webusb-scale.js -o dist/serial-webusb-scale.js"
   },
   "repository": {
     "type": "git",
@@ -26,9 +27,17 @@
   },
   "homepage": "https://github.com/chris-rudmin/serial-websub-scale#readme",
   "devDependencies": {
+    "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "babel-loader": "^8.2.2",
-    "webpack": "^5.11.1"
+    "webpack": "^5.11.1",
+    "webpack-cli": "^4.3.1"
+  },
+  "dependencies": {
+    "web-serial-polyfill": "^1.0.6"
+  },
+  "babel": {
+    "presets": ["@babel/preset-env"]
   }
 }
