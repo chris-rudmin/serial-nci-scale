@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/chris-rudmin/serial-websub-scale/issues"
   },
-  "homepage": "https://github.com/chris-rudmin/serial-websub-scale#readme"
+  "homepage": "https://github.com/chris-rudmin/serial-websub-scale#readme",
+  "devDependencies": {
+    "webpack": "^5.11.1"
+  }
 }
