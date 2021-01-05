@@ -1,0 +1,28 @@
+{
+  "name": "serial-webusb-scale",
+  "version": "0.0.1",
+  "description": "WebUSB interface for Salter Brecknell PS-USB scales",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/chris-rudmin/serial-websub-scale.git"
+  },
+  "keywords": [
+    "WebUSB",
+    "scale",
+    "serial",
+    "R232",
+    "PS-USB",
+    "Salter",
+    "Brecknell"
+  ],
+  "author": "Chris Rudmin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chris-rudmin/serial-websub-scale/issues"
+  },
+  "homepage": "https://github.com/chris-rudmin/serial-websub-scale#readme"
+}
