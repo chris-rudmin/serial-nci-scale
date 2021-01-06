@@ -26,7 +26,7 @@ const commands = {
 export default class SerialWebUSBScale {
   constructor({ onSettled = () => {}, portConfig }) {
     this.onSettled = onSettled;
-    this.portPromise = serial.requestPort({ filters }).then(port => {
+    this.portPromise = serial.requestPort({ filters }).then(async port => {
       this.port = port;
       this.reader = port.readable.getReader();
       this.writer = port.writable.getWriter();
