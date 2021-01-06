@@ -12,33 +12,77 @@ const psUsbConfig = {
   parity: 'even',
 };
 
-const commands = {
-  getReading: 0x570d,
-  getStatus: 0x530d,
-  zero: 0x5a0d,
-  tare: 0x540d,
-  changeUnit: 0x550d,
-  toggleHold: 0x4c0d,
-  powerOff: 0x580d,
+// USB default commands
+const Scp12Commands = {
+  getWeight:  0x570d, // W
+  getStatus:  0x530d, // S
+  zero:       0x5a0d, // Z
+}
+
+// EH-SCP commands
+const EhScpCommands = {
+  getWeight:      0x570d, // W
+  zero:           0x5a0d, // Z
+  standardWeight: 0x4c0d, // L
+  metricWeight:   0x4b0d, // K
+};
+
+// DB9 single mode commands
+const SingleCommands = {
+  getWeight:  0x570d, // W
+  getStatus:  0x530d, // S
+  zero:       0x5a0d, // Z
+  tare:       0x540d, // T
+  changeUnit: 0x550d, // U
+  toggleHold: 0x4c0d, // L
+  powerOff:   0x580d, // X
 };
 
 
-export default class SerialWebUSBScale {
+export default class SerialWebUSBScale extends EventTarget {
   constructor({ onSettled = () => {}, portConfig }) {
     this.onSettled = onSettled;
-    this.portPromise = serial.requestPort({ filters }).then(async port => {
+    this.portConfig = Object.assign({}, psUsbConfig, portConfig);
+    this.portPromise = this.initPort();
+
+    // Recursive Async loop to read
+    // this.portPromise.then(async () => {
+    //   const { done, value } = await this.reader.read();
+
+    //   if (done) {
+    //     // Allow the serial port to be closed later.
+    //     reader.releaseLock();
+    //     break;
+    //   }
+
+    //   if (value) {
+    //     console.log(value);
+    //   }
+    // })
+  }
+
+  initPort() {
+    return serial.requestPort({ filters }).then(async port => {
       this.port = port;
       this.reader = port.readable.getReader();
       this.writer = port.writable.getWriter();
-
-      const config = Object.assign({}, psUsbConfig, portConfig);
-      await port.open(config);
+      await port.open(this.portConfig);
       return port;
     });
   }
 
-  // Get the weight
   async getWeight() {
-    await this.writer.write()
+    await this.portPromise;
+    await this.writer.write();
+  }
+
+  async getStatus() {
+    await this.portPromise;
+    await this.writer.write();
+  }
+
+  async zero() {
+    await this.portPromise;
+    this.writer.write();
   }
 };
