@@ -97,6 +97,7 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.2",
     "web-serial-polyfill": "^1.0.6"
   },
   "eslintConfig": {
