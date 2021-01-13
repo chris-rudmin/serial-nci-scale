@@ -52,7 +52,7 @@ export default function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h5" >
-            WebUSB Scale Demo
+            Serial NCI Scale Demo
           </Typography>
         </Toolbar>
       </AppBar>

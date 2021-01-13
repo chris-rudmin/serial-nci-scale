@@ -1,3 +1,4 @@
-# Serial WebUSB Scale
+# Serial NCI Scale
 
-A Serial WebUSB Scale written against the Salter Brecknell PS-USB spec for serial scales. 
+A Serial NCI Scale written against the Salter Brecknell PS-USB spec for serial scales. 
+
