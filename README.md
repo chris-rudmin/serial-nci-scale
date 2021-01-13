@@ -16,12 +16,12 @@ npm install serial-nci-scale --save
 
 ### Instance Methods
 
-- `getWeight()` - asynchronous - Queries and returns the current weight. Required to be called from user action
-- `getStatus()` - asynchronous - Queries and returns the current status. Required to be called from user action
-- `zero()` - asynchronous - Zeroes the scale. Required to be called from user action
+- `getWeight()` - Returns a promise which resolves with scale weight data. Required to be called from user action
+- `getStatus()` - Returns a promise which resolves with scale status data. Required to be called from user action
+- `zero()` - Returns a promise which resolves when the scale is zeroed. Required to be called from user action
 - `startPolling()` - Starts polling the scale for weight data every 250ms. Required to be called from user action
 - `stopPolling()` - Stops polling the scale
-- `disconnect()` - asynchronous - Stops all activities and closes the read and write streams and frees the serial port
+- `disconnect()` - Returns a promise which resolves once disconnected. Closes the read and write streams and frees the serial port
 
 ### Example
 
