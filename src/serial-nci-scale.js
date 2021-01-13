@@ -11,19 +11,21 @@ const psUsbConfig = {
   parity: 'even',
 };
 
-// USB default commands
-const Scp12Commands = {
-  CR: parseInt('0d', 16), // Carriage Return
-  W:  parseInt('57', 16), // Get Weight
-  S:  parseInt('53', 16), // Get Status
-  Z:  parseInt('5a', 16), // Zero
-};
-
-const ResponseChars = {
+const commandChars = {
   CR:  parseInt('0d', 16), // Carriage Return
+  W:   parseInt('57', 16), // Get Weight
+  S:   parseInt('53', 16), // Get Status
+  Z:   parseInt('5a', 16), // Zero
   LF:  parseInt('0A', 16), // Line Feed
   ETX: parseInt('03', 16), // End Of Text
   Q:   parseInt('3F', 16), // Question Mark
+};
+
+// USB default commands
+const commands = {
+  getWeight: new Uint8Array([commandChars.W, commandChars.CR]),
+  getStatus: new Uint8Array([commandChars.S, commandChars.CR]),
+  zero: new Uint8Array([commandChars.Z, commandChars.CR]),
 };
 
 const eventDefaults = {
@@ -34,8 +36,7 @@ const eventDefaults = {
 };
 
 
-// Implements NCI (or H-100), (or 3825) protocol
-// No Handshake.
+// Implements NCI protocol (Scp-12 or H-100 or 3825/3835). No Handshake.
 export default class SerialNCIScale extends EventTarget {
   constructor() {
     super();
@@ -69,8 +70,8 @@ export default class SerialNCIScale extends EventTarget {
     if (this.isConnected) {
       this.isDisconnecting = true;
 
-      // One last poll loop to unlock the reader before disconnecting
-      return this.getWeight().then(() => {
+      // One last query to unlock the reader before disconnecting
+      return this.send(commands.getStatus).then(() => {
         this.reader.releaseLock();
         this.writer.releaseLock();
         return this.port.close();
@@ -120,13 +121,13 @@ export default class SerialNCIScale extends EventTarget {
       overCapacity: secondByte[1] === '1' ? true : false,
       romError: secondByte[2] === '1' ? true : false,
       calibrationError: secondByte[3] === '1' ? true : false,
-    }
+    };
   }
 
   flushResponseBuffer() {
-    const lfIndex = this.responseBuffer.indexOf(ResponseChars.LF);
-    const crIndex = this.responseBuffer.indexOf(ResponseChars.CR)
-    const etxIndex = this.responseBuffer.indexOf(ResponseChars.ETX);
+    const lfIndex = this.responseBuffer.indexOf(commandChars.LF);
+    const crIndex = this.responseBuffer.indexOf(commandChars.CR)
+    const etxIndex = this.responseBuffer.indexOf(commandChars.ETX);
 
     // discard anything preceeding <LF> and process again
     if (lfIndex > 0) {
@@ -137,7 +138,7 @@ export default class SerialNCIScale extends EventTarget {
     if (lfIndex === 0 && crIndex > 0) {
 
       // Unknown Command Response <LF>?<CR>
-      if (crIndex === 2 && this.responseBuffer[1] === ResponseChars.Q) {
+      if (crIndex === 2 && this.responseBuffer[1] === commandChars.Q) {
         console.warn('Unrecognized command received');
         this.responseBuffer = this.responseBuffer.slice(crIndex + 1);
         return this.flushResponseBuffer();
@@ -201,7 +202,7 @@ export default class SerialNCIScale extends EventTarget {
         this.isPolling = true;
         const poll = setInterval(() => {
           if (this.isConnected && this.isPolling && !this.isDisconnecting){ 
-            this.getWeight();
+            this.send(commands.getWeight);
           }
           else {
             clearInterval(poll);
@@ -218,30 +219,27 @@ export default class SerialNCIScale extends EventTarget {
 
   getWeight() {
     return new Promise(resolve => {
-      const { W, CR } = Scp12Commands;
       const onWeight = (e) => {
         this.removeEventListener('weight', onWeight);
         resolve(e.detail);
       };
       this.addEventListener('weight', onWeight);
-      this.send(new Uint8Array([W, CR]));
+      this.send(commands.getWeight);
     });
   }
 
   getStatus() {
     return new Promise(resolve => {
-      const { S, CR } = Scp12Commands;
       const onStatus = ({detail}) => {
         this.removeEventListener('status', onStatus);
         resolve(detail);
       };
       this.addEventListener('status', onStatus);
-      this.send(new Uint8Array([S, CR]));
+      this.send(commands.getStatus);
     });
   }
 
   zero() {
-    const { Z, CR } = Scp12Commands;
-    return this.send(new Uint8Array([Z, CR]));
+    return this.send(commands.zero);
   }
 };
