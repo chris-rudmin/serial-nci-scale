@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import Divider from '@material-ui/core/Divider';
+
 
 const scale = new SerialNCIScale();
 const useStyles = makeStyles(theme => ({
@@ -17,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(4),
   },
-  container: {
+  spaceTop: {
     marginTop: theme.spacing(4),
   }
 }));
@@ -57,8 +59,19 @@ export default function App() {
         </Toolbar>
       </AppBar>
 
-      <Container className={classes.container}>
-        <Typography variant="h6" gutterBottom>
+      <Container className={classes.spaceTop} maxWidth="md">
+        <Typography variant="h5">
+          About this demo.
+        </Typography>
+
+        <Typography variant="body1" display="block" gutterBottom>
+          To use the demo, be sure to enable the Web Serial API in chrome flags and plug in your scale.
+          USB scales will need the appropriate VCP driver on Windows to virtualize a serial port.
+        </Typography>
+
+        <Divider />
+
+        <Typography variant="h5" gutterBottom className={classes.spaceTop}>
           Controls
         </Typography>
 
@@ -86,16 +99,16 @@ export default function App() {
           Disconnect
         </Button>
 
-        <Card>
+        <Card className={classes.spaceTop}>
           <CardHeader
             title="Event Log"
             subheader={eventTimeStamp}
           />
           <CardContent>
-            <Typography variant="subtitle2" display="block">
-              Event: "{eventType}"
+            <Typography variant="body1" display="block">
+              type: {eventType}
             </Typography>
-            <Typography variant="subtitle2" display="block">
+            <Typography variant="body1" display="block" component="div">
               <div><pre>{JSON.stringify(scaleData, null, 2) }</pre></div>
             </Typography>
           </CardContent>
