@@ -40,6 +40,7 @@ export default class SerialNCIScale extends EventTarget {
   constructor() {
     super();
     this.isConnected = false;
+    this.isDisconnecting = false;
     this.isPolling = false;
     this.lastSettled = Object.assign({}, eventDefaults);
     this.decoder = new TextDecoder('windows-1252');
@@ -48,24 +49,30 @@ export default class SerialNCIScale extends EventTarget {
 
   async initPort() {
     if (!this.isConnected) {
-      this.port = await navigator.serial.requestPort({ filters });
-      await this.port.open(psUsbConfig);
-      this.reader = this.port.readable.getReader();
-      this.writer = this.port.writable.getWriter();
-      this.isConnected = true;
-      this.readLoop();
+      return navigator.serial.requestPort({ filters }).then(port => {
+        this.port = port;
+        return this.port.open(psUsbConfig);
+       }).then(() => {
+        this.reader = this.port.readable.getReader();
+        this.writer = this.port.writable.getWriter();
+        this.isConnected = true;
+        this.readLoop();
+      }).catch(e => {
+        console.log(e);
+        this.disconnect();
+      });
     }
-
-    return this.port;
   }
 
   async disconnect () {
     if (this.isConnected) {
-      this.isConnected = false;
+      this.isDisconnecting = true;
       await this.getWeight(); // Await one last poll to complete before disconnecting
       this.reader.releaseLock();
       this.writer.releaseLock();
-      return this.port.close();
+      await this.port.close();
+      this.isDisconnecting = false;
+      this.isConnected = false;
     }
   }
 
@@ -166,7 +173,7 @@ export default class SerialNCIScale extends EventTarget {
     return this.reader.read().then(({ value, done }) => {
 
       // Keep read loop open while connected
-      if (this.isConnected) {
+      if (this.isConnected && !this.isDisconnecting) {
         this.readLoop();
       }
 
@@ -179,9 +186,19 @@ export default class SerialNCIScale extends EventTarget {
   }
 
   startPolling() {
-    if (this.isConnected && !this.isPolling) {
-      this.isPolling = true;
-      const poll = setInterval(() => this.isConnected && this.isPolling ? this.getWeight() : clearInterval(poll), 250);
+    if (!this.isPolling) {
+      this.initPort().then(() => {
+        this.isPolling = true;
+        const poll = setInterval(() => {
+          if (this.isConnected && this.isPolling && !this.isDisconnecting){ 
+            this.getWeight();
+          }
+          else {
+            clearInterval(poll);
+            this.isPolling = false;
+          }
+        }, 250);
+      });
     }
   }
 

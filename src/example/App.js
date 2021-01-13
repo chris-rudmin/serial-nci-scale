@@ -93,7 +93,7 @@ export default function App() {
           />
           <CardContent>
             <Typography variant="subtitle2" display="block">
-              Event type {eventType}
+              Event: "{eventType}"
             </Typography>
             <Typography variant="subtitle2" display="block">
               <div><pre>{JSON.stringify(scaleData, null, 2) }</pre></div>
