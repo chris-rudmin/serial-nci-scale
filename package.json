@@ -1,32 +1,37 @@
 {
-  "name": "serial-webusb-scale",
+  "name": "serial-nci-scale",
   "version": "0.0.1",
   "private": true,
-  "description": "WebUSB interface for Salter Brecknell PS-USB scales",
+  "description": "Serial interface for Salter Brecknell PS-USB scales using NCI protocol and SCP-12 layout",
   "main": "dist/serial-webusb-scale.js",
   "scripts": {
-    "build-dist": "npx babel --no-babelrc src/serial-webusb-scale.js --out-file dist/serial-webusb-scale.js --presets=@babel/preset-env",
+    "build-dist": "npx babel --no-babelrc src/serial-nci-scale.js --out-file dist/serial-nci-scale.js --presets=@babel/preset-env",
     "start": "node scripts/start.js",
     "build-example": "node scripts/build.js && mv build docs",
     "test": "node scripts/test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/chris-rudmin/serial-websub-scale.git"
+    "url": "git+ssh://git@github.com/chris-rudmin/serial-nci-scale.git"
   },
   "keywords": [
-    "WebUSB",
     "scale",
     "serial",
     "R232",
+    "3825",
+    "3835",
+    "SCP-12",
     "PS-USB",
     "Salter",
-    "Brecknell"
+    "Brecknell",
+    "NCI",
+    "Avery",
+    "Weigh-Tronix"
   ],
   "author": "Chris Rudmin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chris-rudmin/serial-websub-scale/issues"
+    "url": "https://github.com/chris-rudmin/serial-nci-scale/issues"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",

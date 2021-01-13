@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SerialWebUSBScale from '../serial-webusb-scale';
+import SerialNCIScale from '../serial-nci-scale';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
