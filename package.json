@@ -7,7 +7,7 @@
   "scripts": {
     "build-dist": "npx babel --no-babelrc src/serial-nci-scale.js --out-file dist/serial-nci-scale.js --presets=@babel/preset-env",
     "start": "node scripts/start.js",
-    "build-example": "node scripts/build.js && mv build docs",
+    "build-example": "node scripts/build.js && rm -rf docs && mv build docs",
     "test": "node scripts/test.js"
   },
   "repository": {
