@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SerialWebUSBScale from '../serial-webusb-scale';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,7 +10,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
-
+const scale = new SerialWebUSBScale({});
 const useStyles = makeStyles(theme => ({
   button: {
     marginTop: theme.spacing(2),
@@ -26,16 +26,24 @@ export default function App() {
   const classes = useStyles();
   const [scaleData, setScaleData] = useState({});
   const [eventTimeStamp, setEventTimeStamp] = useState();
-  let scale = new SerialWebUSBScale({});
 
   const setData = ({detail, timeStamp}) => {
     setScaleData(detail);
     setEventTimeStamp(new Date(timeStamp).toString());
   };
 
-  scale.addEventListener('weight', setData);
-  scale.addEventListener('status', setData);
-  scale.addEventListener('settled', setData);
+  useEffect(() => {
+    scale.addEventListener('weight', setData);
+    scale.addEventListener('status', setData);
+    scale.addEventListener('settled', setData);
+
+    return () => {
+      scale.removeEventListener('weight', setData);
+      scale.removeEventListener('status', setData);
+      scale.removeEventListener('settled', setData);
+    };
+  });
+
 
   return (
     <div>

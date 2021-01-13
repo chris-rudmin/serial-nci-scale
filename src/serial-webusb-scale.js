@@ -70,27 +70,28 @@ export default class SerialWebUSBScale extends EventTarget {
     });
   }
 
-  byteString(n) {
-    if (n < 0 || n > 255 || n % 1 !== 0) {
-        throw new Error(n + " does not fit in a byte");
+  bitArray(n) {
+    // 6 bits because parity bit has been validated and stripped
+    if (n < 0 || n > 63 || n % 1 !== 0) {
+        throw new Error(`${n} does not fit into 6 bits`);
     }
-    return ("000000000" + n.toString(2)).substr(-8)
+    return ("000000" + n.toString(2)).substr(-6).split('').reverse();
   }
 
-  // Status is two byte code
+  // Status is two 7 bit values stored in two bytes
   parseStatus(data) {
-    const firstByte = this.byteString(data[0]);
-    const secondByte = this.byteString(data[1]);
+    const firstByte = this.bitArray(data[0]);
+    const secondByte = this.bitArray(data[1]);
 
     return {
-      stable: firstByte.charAt(0) === '1' ? true : false,
-      atZero: firstByte.charAt(1) === '0' ? true : false,
-      ramError: firstByte.charAt(2) === '0' ? true : false,
-      eepRomError: firstByte.charAt(3) === '0' ? true : false,
-      underCapacity: secondByte.charAt(0) === '1' ? true : false,
-      overCapacity: secondByte.charAt(1) === '1' ? true : false,
-      romError: secondByte.charAt(2) === '0' ? true : false,
-      calibrationError: secondByte.charAt(3) === '0' ? true : false,
+      stable: firstByte[0] === '0' ? true : false,
+      atZero: firstByte[1] === '1' ? true : false,
+      ramError: firstByte[2] === '1' ? true : false,
+      eepRomError: firstByte[3] === '1' ? true : false,
+      underCapacity: secondByte[0] === '1' ? true : false,
+      overCapacity: secondByte[1] === '1' ? true : false,
+      romError: secondByte[2] === '1' ? true : false,
+      calibrationError: secondByte[3] === '1' ? true : false,
     }
   }
 
@@ -124,7 +125,7 @@ export default class SerialWebUSBScale extends EventTarget {
         output.status = this.parseStatus(data.subarray(1, 3));
         break;
 
-      case 4: // <LF>? <CR>
+      case 3: // <LF>?<CR>
         console.warn('Unrecognized command received');
         break;
 
@@ -161,8 +162,10 @@ export default class SerialWebUSBScale extends EventTarget {
   }
 
   startPolling() {
-    this.isPolling = true;
-    const poll = setInterval(() => this.isPolling ? this.getWeight() : clearInterval(poll), 250);
+    if (this.isConnected && !this.isPolling) {
+      this.isPolling = true;
+      const poll = setInterval(() => this.isConnected && this.isPolling ? this.getWeight() : clearInterval(poll), 250);
+    }
   }
 
   stopPolling() {
@@ -173,7 +176,6 @@ export default class SerialWebUSBScale extends EventTarget {
     return new Promise(resolve => {
       const { W, CR } = Scp12Commands;
       const onWeight = (e) => {
-        console.log(e);
         this.removeEventListener('weight', onWeight);
         resolve(e.detail);
       };
