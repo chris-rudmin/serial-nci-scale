@@ -1,6 +1,6 @@
 # Serial NCI Scale
 
-A Serial NCI Scale written against the Salter Brecknell PS-USB spec.
+An API to query a Serial Scale which supports the NCI protocal (SCP-12, NCI 3825, NCI 3835). Tested against the Salter Brecknell PS-USB scale. Depends on the Web Serial API.
 
 
 ## Getting Started
