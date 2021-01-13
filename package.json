@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "Serial interface for Salter Brecknell PS-USB scales using NCI protocol and SCP-12 layout",
-  "main": "dist/serial-webusb-scale.js",
+  "main": "dist/serial-nci-scale.js",
   "scripts": {
     "build-dist": "npx babel --no-babelrc src/serial-nci-scale.js --out-file dist/serial-nci-scale.js --presets=@babel/preset-env",
     "start": "node scripts/start.js",
@@ -99,12 +99,10 @@
     "webpack": "4.44.2",
     "webpack-dev-server": "3.11.0",
     "webpack-manifest-plugin": "2.2.0",
-    "workbox-webpack-plugin": "5.1.4"
+    "workbox-webpack-plugin": "5.1.4",
+    "@material-ui/core": "^4.11.2"
   },
-  "dependencies": {
-    "@material-ui/core": "^4.11.2",
-    "web-serial-polyfill": "^1.0.6"
-  },
+  "dependencies": {},
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -140,7 +138,7 @@
       "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
     ],
     "testEnvironment": "jsdom",
-    "testRunner": "/Users/christopherrudmin/Software/serial-webusb-scale/node_modules/jest-circus/runner.js",
+    "testRunner": "/Users/christopherrudmin/Software/serial-nci-scale/node_modules/jest-circus/runner.js",
     "transform": {
       "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",

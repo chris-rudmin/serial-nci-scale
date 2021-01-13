@@ -10,7 +10,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
-const scale = new SerialWebUSBScale({});
+const scale = new SerialNCIScale();
 const useStyles = makeStyles(theme => ({
   button: {
     marginTop: theme.spacing(2),

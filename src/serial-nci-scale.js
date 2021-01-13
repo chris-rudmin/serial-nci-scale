@@ -106,7 +106,7 @@ export default class SerialNCIScale extends EventTarget {
   flushResponseBuffer() {
     const lfIndex = this.responseBuffer.indexOf(ResponseChars.LF);
     const crIndex = this.responseBuffer.indexOf(ResponseChars.CR)
-    const etxIndex = this.responseBuffer.indexOf(ResponseChards.ETX);
+    const etxIndex = this.responseBuffer.indexOf(ResponseChars.ETX);
 
     // discard anything preceeding <LF> and process again
     if (lfIndex > 0) {
@@ -147,7 +147,7 @@ export default class SerialNCIScale extends EventTarget {
 
         // Publish any events
         if (output.type) {
-          this.dispatchEvent(new CustomEvent(data.type, {detail: {...output}}))
+          this.dispatchEvent(new CustomEvent(output.type, {detail: {...output}}))
 
           if (output.type === 'weight' && this.lastSettled.weight !== output.weight && output.status.stable) {
             this.lastSettled = output;
