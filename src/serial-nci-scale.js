@@ -58,7 +58,7 @@ export default class SerialNCIScale extends EventTarget {
         this.isConnected = true;
         this.readLoop();
       }).catch(e => {
-        console.log(e);
+        console.error(e);
         this.disconnect();
       });
     }
@@ -69,7 +69,7 @@ export default class SerialNCIScale extends EventTarget {
     if (this.isConnected) {
       this.isDisconnecting = true;
 
-      // Await one last poll to unlock the reader before disconnecting
+      // One last poll loop to unlock the reader before disconnecting
       return this.getWeight().then(() => {
         this.reader.releaseLock();
         this.writer.releaseLock();
@@ -87,7 +87,9 @@ export default class SerialNCIScale extends EventTarget {
     // Don't bother to disconnect gracefully
     this.isConnected = false;
     this.isDisconnecting = false;
-    return this.port.close();
+
+    // Try to close the port, but this will likely throw an error
+    return this.port.close().catch(e => console.error(e));
   }
 
   send (data) {
