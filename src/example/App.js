@@ -26,10 +26,12 @@ export default function App() {
   const classes = useStyles();
   const [scaleData, setScaleData] = useState({});
   const [eventTimeStamp, setEventTimeStamp] = useState();
+  const [eventType, setEventType] = useState();
 
-  const setData = ({detail, timeStamp}) => {
+  const setData = ({detail, timeStamp, type}) => {
     setScaleData(detail);
     setEventTimeStamp(new Date(timeStamp).toString());
+    setEventType(type);
   };
 
   useEffect(() => {
@@ -90,6 +92,9 @@ export default function App() {
             subheader={eventTimeStamp}
           />
           <CardContent>
+            <Typography variant="subtitle2" display="block">
+              Event type {eventType}
+            </Typography>
             <Typography variant="subtitle2" display="block">
               <div><pre>{JSON.stringify(scaleData, null, 2) }</pre></div>
             </Typography>

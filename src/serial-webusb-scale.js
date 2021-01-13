@@ -99,23 +99,30 @@ export default class SerialWebUSBScale extends EventTarget {
     const output = {};
 
     switch (data.length) {
+      case 16: // <LF>p00xxx.xxUU<CR>hh<ETX>
+        output.type = 'weight';
+        output.weight = parseFloat(this.decoder.decode(data.subarray(1, 10)).trim(), 10);
+        output.units = this.decoder.decode(data.subarray(10, 12)).trim();
+        output.status = this.parseStatus(data.subarray(13, 15));
+        break;
+
       case 15: // <LF>p00xxxxxUU<CR>hh<ETX>
         output.type = 'weight';
-        output.weight = parseInt(this.decoder.decode(data.subarray(1, 9)).trim(), 10);
+        output.weight = parseFloat(this.decoder.decode(data.subarray(1, 9)).trim(), 10);
         output.units = this.decoder.decode(data.subarray(9, 11)).trim();
         output.status = this.parseStatus(data.subarray(12, 14));
         break;
 
       case 14: // <LF>pxxx.xxUU<CR>hh<ETX>
         output.type = 'weight';
-        output.weight = parseInt(this.decoder.decode(data.subarray(1, 8)).trim(), 10);
+        output.weight = parseFloat(this.decoder.decode(data.subarray(1, 8)).trim(), 10);
         output.units = this.decoder.decode(data.subarray(8, 10)).trim();
         output.status = this.parseStatus(data.subarray(11, 13));
         break;
 
       case 13: // <LF>pxxxxxUU<CR>hh<ETX>
         output.type = 'weight';
-        output.weight = parseInt(this.decoder.decode(data.subarray(1, 7)).trim(), 10);
+        output.weight = parseFloat(this.decoder.decode(data.subarray(1, 7)).trim(), 10);
         output.units = this.decoder.decode(data.subarray(7, 9)).trim();
         output.status = this.parseStatus(data.subarray(10, 12));
         break;
