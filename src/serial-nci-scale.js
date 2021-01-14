@@ -142,7 +142,7 @@ export default class SerialNCIScale extends EventTarget {
       }
 
       // Data to publish
-      else if (etxIndex !== -1) {
+      if (etxIndex !== -1) {
         const output = {};
 
         // Status format <LF>hh<CR><ETX>
@@ -242,6 +242,6 @@ export default class SerialNCIScale extends EventTarget {
 };
 
 
-SerialNCIScale.supportedScalesFilter = [
+SerialNCIScale.supportedScaleFilters = [
   { usbVendorId: 0x1A86, usbProductId: 0x7523 }, // CH340 serial converter
 ]
