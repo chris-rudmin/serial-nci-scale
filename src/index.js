@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './example/index.css';
 import App from './example/App';
 import reportWebVitals from './example/reportWebVitals';
 import CssBaseline from '@material-ui/core/CssBaseline';
