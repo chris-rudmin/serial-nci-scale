@@ -71,18 +71,19 @@ export default class SerialNCIScale extends EventTarget {
       return this.getWeight().then(() => {
         this.reader.releaseLock();
         this.writer.releaseLock();
-        return this.port.close().catch(e => console.error(e));
+        return this.port.close();
+      }).catch(e => {
+        console.error(e);
       }).finally(() => {
         this.isDisconnecting = false;
         this.isConnected = false;
-      })
+      });
     }
   }
 
+  // Don't bother to disconnect gracefully
   readWriteError (e) {
     console.error(e);
-
-    // Don't bother to disconnect gracefully
     this.isConnected = false;
     this.isDisconnecting = false;
 

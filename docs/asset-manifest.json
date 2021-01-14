@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/serial-nci-scale/static/css/main.f45230d9.chunk.css",
-    "main.js": "/serial-nci-scale/static/js/main.3ef4fe6b.chunk.js",
-    "main.js.map": "/serial-nci-scale/static/js/main.3ef4fe6b.chunk.js.map",
+    "main.js": "/serial-nci-scale/static/js/main.bd4755fc.chunk.js",
+    "main.js.map": "/serial-nci-scale/static/js/main.bd4755fc.chunk.js.map",
     "runtime-main.js": "/serial-nci-scale/static/js/runtime-main.b3656d8e.js",
     "runtime-main.js.map": "/serial-nci-scale/static/js/runtime-main.b3656d8e.js.map",
     "static/js/2.822932a7.chunk.js": "/serial-nci-scale/static/js/2.822932a7.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.b3656d8e.js",
     "static/js/2.822932a7.chunk.js",
     "static/css/main.f45230d9.chunk.css",
-    "static/js/main.3ef4fe6b.chunk.js"
+    "static/js/main.bd4755fc.chunk.js"
   ]
 }
