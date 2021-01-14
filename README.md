@@ -15,14 +15,14 @@ npm install serial-nci-scale --save
 ```
 
 ### Constructor
-- `const scale = new SerialNCIScale({ portConfig, filters })` - Create a new instance with device filters array or portConfig object
+- `const scale = new SerialNCIScale({ portConfig, filters })` - Create a new instance with optional device filter array or port config object
 
 ### Instance Methods
 
 - `scale.getWeight()` - Returns a promise which resolves with scale weight data. Required to be called from user action
 - `scale.getStatus()` - Returns a promise which resolves with scale status data. Required to be called from user action
 - `scale.zero()` - Returns a promise which resolves when the scale is zeroed. Required to be called from user action
-- `scale.startPolling()` - Starts polling the scale for weight data every 250ms. Required to be called from user action
+- `scale.startPolling()` - Starts polling the scale for weight data every 500ms. Required to be called from user action
 - `scale.stopPolling()` - Stops polling the scale
 - `scale.disconnect()` - Returns a promise which resolves once disconnected. Closes the read and write streams and frees the serial port
 
