@@ -23,8 +23,8 @@ const commandChars = {
 
 // USB default commands
 const commands = {
-  getWeight: new Uint8Array([commandChars.W, commandChars.CR]),
-  getStatus: new Uint8Array([commandChars.S, commandChars.CR]),
+  weight: new Uint8Array([commandChars.W, commandChars.CR]),
+  status: new Uint8Array([commandChars.S, commandChars.CR]),
   zero: new Uint8Array([commandChars.Z, commandChars.CR]),
 };
 
@@ -58,9 +58,6 @@ export default class SerialNCIScale extends EventTarget {
         this.writer = this.port.writable.getWriter();
         this.isConnected = true;
         this.readLoop();
-      }).catch(e => {
-        console.error(e);
-        this.disconnect();
       });
     }
   }
@@ -71,14 +68,14 @@ export default class SerialNCIScale extends EventTarget {
       this.isDisconnecting = true;
 
       // One last query to unlock the reader before disconnecting
-      return this.send(commands.getStatus).then(() => {
+      return this.send(commands.status).then(() => {
         this.reader.releaseLock();
         this.writer.releaseLock();
         return this.port.close();
       }).finally(() => {
         this.isDisconnecting = false;
         this.isConnected = false;
-      });
+      })
     }
   }
 
@@ -95,7 +92,10 @@ export default class SerialNCIScale extends EventTarget {
 
   send (data) {
     return this.initPort().then(() => {
-      return this.writer.write(data).catch(e => this.readWriteError(e));
+      return this.writer.write(data).catch(e => {
+        this.readWriteError(e);
+        throw e;
+      });
     });
   }
 
@@ -184,7 +184,7 @@ export default class SerialNCIScale extends EventTarget {
   }
 
   readLoop() {
-    return this.reader.read().then(({ value, done }) => {
+    this.reader.read().then(({ value, done }) => {
 
       // Keep read loop open while connected
       if (this.isConnected && !this.isDisconnecting) {
@@ -202,7 +202,7 @@ export default class SerialNCIScale extends EventTarget {
         this.isPolling = true;
         const poll = setInterval(() => {
           if (this.isConnected && this.isPolling && !this.isDisconnecting){ 
-            this.send(commands.getWeight);
+            this.send(commands.weight);
           }
           else {
             clearInterval(poll);
@@ -217,26 +217,26 @@ export default class SerialNCIScale extends EventTarget {
     this.isPolling = false;
   }
 
-  getWeight() {
-    return new Promise(resolve => {
-      const onWeight = (e) => {
-        this.removeEventListener('weight', onWeight);
+  sendAndGetResponse(type) {
+    return new Promise((resolve, reject) => {
+      const onResponse = (e) => {
+        this.removeEventListener(type, onResponse);
         resolve(e.detail);
       };
-      this.addEventListener('weight', onWeight);
-      this.send(commands.getWeight);
+      this.addEventListener(type, onResponse);
+      this.send(commands[type]).catch(e => {
+        this.removeEventListener(type, onResponse);
+        reject(e);
+      });
     });
   }
 
-  getStatus() {
-    return new Promise(resolve => {
-      const onStatus = ({detail}) => {
-        this.removeEventListener('status', onStatus);
-        resolve(detail);
-      };
-      this.addEventListener('status', onStatus);
-      this.send(commands.getStatus);
-    });
+  getWeight() {
+    return this.sendAndGetResponse('weight');
+  }
+
+  getWeight() {
+    return this.sendAndGetResponse('status');
   }
 
   zero() {
