@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
   button: {
     marginTop: theme.spacing(2),
     marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(4),
   },
   spaceTop: {
     marginTop: theme.spacing(4),
@@ -27,12 +26,13 @@ const useStyles = makeStyles(theme => ({
 export default function App() {
   const classes = useStyles();
   const [scaleData, setScaleData] = useState({});
-  const [eventTimeStamp, setEventTimeStamp] = useState();
-  const [eventType, setEventType] = useState();
+  const [eventTimeStamp, setEventTimeStamp] = useState('');
+  const [eventType, setEventType] = useState('');
+  const isWebSerialSupported = SerialNCIScale.isWebSerialSupported();
 
   const setData = ({detail, timeStamp, type}) => {
     setScaleData(detail);
-    setEventTimeStamp(new Date(timeStamp).toString());
+    setEventTimeStamp(timeStamp);
     setEventType(type);
   };
 
@@ -54,65 +54,87 @@ export default function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h5" >
-            Serial NCI Scale Demo
+            Serial NCI Scale
           </Typography>
         </Toolbar>
       </AppBar>
 
       <Container className={classes.spaceTop} maxWidth="md">
-        <Typography variant="h5">
-          About this demo.
+        <Typography variant="h4" gutterBottom>
+          Connect Your Scale!
         </Typography>
 
-        <Typography variant="body1" display="block" gutterBottom>
-          To use the demo, be sure to enable the Web Serial API in chrome flags and plug in your scale.
+        <Typography variant="body1" display="block">
+          To test the serial-nci-scale library, be sure to enable the Web Serial API in chrome://flags and connect your scale.
           USB scales will need the appropriate VCP driver on Windows to virtualize a serial port.
         </Typography>
 
-        <Divider />
-
         <Typography variant="h5" gutterBottom className={classes.spaceTop}>
-          Controls
+         Known Supported Devices
         </Typography>
 
-        <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.getWeight().then(weight => console.log(weight))}>
-          Get Weight
-        </Button>
+        <Typography variant="body1" display="block" gutterBottom>
+          - Brecknell PS-USB (70lb)
+        </Typography>
 
-        <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.getStatus().then(status => console.log(status))}>
-          Get Status
-        </Button>
+        <Divider className={classes.spaceTop}/>
 
-        <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.zero()}>
-          Zero
-        </Button>
-
-        <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.startPolling()}>
-          Start Polling
-        </Button>
-
-        <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.stopPolling()}>
-          Stop Polling
-        </Button>
-
-        <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.disconnect()}>
-          Disconnect
-        </Button>
-
-        <Card className={classes.spaceTop}>
-          <CardHeader
-            title="Event Log"
-            subheader={eventTimeStamp}
-          />
-          <CardContent>
-            <Typography variant="body1" display="block">
-              type: {eventType}
+        { isWebSerialSupported ? (
+          <div>
+            <Typography variant="h5" gutterBottom className={classes.spaceTop}>
+              Controls
             </Typography>
-            <Typography variant="body1" display="block" component="div">
-              <div><pre>{JSON.stringify(scaleData, null, 2) }</pre></div>
-            </Typography>
-          </CardContent>
-        </Card>
+
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.getWeight().then(weight => console.log(weight))}>
+              Get Weight
+            </Button>
+
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.getStatus().then(status => console.log(status))}>
+              Get Status
+            </Button>
+
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.zero()}>
+              Zero
+            </Button>
+
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.startPolling()}>
+              Start Polling
+            </Button>
+
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.stopPolling()}>
+              Stop Polling
+            </Button>
+
+            <Button className={classes.button} variant="contained" color="primary" onClick={() => scale.disconnect()}>
+              Disconnect
+            </Button>
+
+            <Card className={classes.spaceTop}>
+              <CardHeader
+                title="Event Log"
+                subheader={`Event '${eventType}' at time ${eventTimeStamp}`}
+              />
+              <CardContent>
+                <Typography variant="body1" display="block" component="div">
+                  <pre>{JSON.stringify(scaleData, null, 2) }</pre>
+                </Typography>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <Card className={classes.spaceTop}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom>
+                Web Serial API is not supported in your browser
+              </Typography>
+
+              <Typography variant="body1">
+                Try using Chrome with the Web Serial API enabled with flag chrome://flags/#enable-experimental-web-platform-features
+              </Typography>
+            </CardContent>
+          </Card>
+        )
+      }
       </Container>
     </div>
   );

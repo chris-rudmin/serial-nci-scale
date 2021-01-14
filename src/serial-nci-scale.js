@@ -1,16 +1,4 @@
 
-const filters = [
-  { usbVendorId: 0x1A86, usbProductId: 0x7523 }, // CH340 serial converter
-];
-
-// 7e1 byte format
-const psUsbConfig = {
-  baudRate: 9600,
-  dataBits: 7, 
-  stopBits: 1,
-  parity: 'even',
-};
-
 const commandChars = {
   CR:  parseInt('0d', 16), // Carriage Return
   W:   parseInt('57', 16), // Get Weight
@@ -35,11 +23,21 @@ const eventDefaults = {
   status: {}
 };
 
+// 7e1 byte format
+const defaultPortConfig = {
+  baudRate: 9600,
+  dataBits: 7, 
+  stopBits: 1,
+  parity: 'even',
+};
+
 
 // Implements NCI protocol (Scp-12 or H-100 or 3825/3835). No Handshake.
 export default class SerialNCIScale extends EventTarget {
-  constructor() {
+  constructor(config = {}) {
     super();
+    this.filters = config.filters || [];
+    this.portConfig = Object.assign({}, defaultPortConfig, config.portConfig);
     this.isConnected = false;
     this.isDisconnecting = false;
     this.isPolling = false;
@@ -48,11 +46,15 @@ export default class SerialNCIScale extends EventTarget {
     this.responseBuffer = new Uint8Array();
   }
 
+  static isWebSerialSupported() {
+    return navigator && navigator.serial ? true : false;
+  }
+
   async initPort() {
     if (!this.isConnected) {
-      return navigator.serial.requestPort({ filters }).then(port => {
+      return navigator.serial.requestPort({ filters: this.filters }).then(port => {
         this.port = port;
-        return this.port.open(psUsbConfig);
+        return this.port.open(this.portConfig);
        }).then(() => {
         this.reader = this.port.readable.getReader();
         this.writer = this.port.writable.getWriter();
@@ -72,29 +74,23 @@ export default class SerialNCIScale extends EventTarget {
         this.reader.releaseLock();
         this.writer.releaseLock();
         return this.port.close();
-      }).catch(e => {
-        console.error(e);
-      }).finally(() => {
+      }).catch(e => console.error(e)).finally(() => {
         this.isDisconnecting = false;
         this.isConnected = false;
       });
     }
   }
 
-  // Don't bother to disconnect gracefully
-  readWriteError (e) {
+  onDataTransferError (e) {
     console.error(e);
     this.isConnected = false;
     this.isDisconnecting = false;
-
-    // Try to close the port, but this will likely throw an error
-    return this.port.close().catch(e => console.error(e));
   }
 
   send (data) {
     return this.initPort().then(() => {
       return this.writer.write(data).catch(e => {
-        this.readWriteError(e);
+        this.onDataTransferError(e);
         throw e;
       });
     });
@@ -135,7 +131,7 @@ export default class SerialNCIScale extends EventTarget {
       this.responseBuffer = this.responseBuffer.slice(lfIndex);
       return this.flushResponseBuffer();
     }
-    
+
     if (lfIndex === 0 && crIndex > 0) {
 
       // Unknown Command Response <LF>?<CR>
@@ -194,7 +190,7 @@ export default class SerialNCIScale extends EventTarget {
 
       this.responseBuffer = Uint8Array.from([...this.responseBuffer, ...value]);
       this.flushResponseBuffer();
-    }).catch(e => this.readWriteError(e));
+    }).catch(e => this.onDataTransferError(e));
   }
 
   startPolling() {
@@ -209,7 +205,7 @@ export default class SerialNCIScale extends EventTarget {
             clearInterval(poll);
             this.isPolling = false;
           }
-        }, 250);
+        }, 500);
       });
     }
   }
@@ -244,3 +240,8 @@ export default class SerialNCIScale extends EventTarget {
     return this.send(commands.zero);
   }
 };
+
+
+SerialNCIScale.supportedScalesFilter = [
+  { usbVendorId: 0x1A86, usbProductId: 0x7523 }, // CH340 serial converter
+]

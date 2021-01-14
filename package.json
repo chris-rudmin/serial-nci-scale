@@ -1,6 +1,6 @@
 {
   "name": "serial-nci-scale",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Serial interface for Salter Brecknell PS-USB scales using NCI protocol and SCP-12 layout",
   "main": "dist/serial-nci-scale.js",
   "files": [
