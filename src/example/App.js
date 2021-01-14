@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider';
 
 
 const scale = new SerialNCIScale();
+const isWebSerialSupported = SerialNCIScale.isWebSerialSupported();
 const useStyles = makeStyles(theme => ({
   button: {
     marginTop: theme.spacing(2),
@@ -25,28 +26,33 @@ const useStyles = makeStyles(theme => ({
 
 export default function App() {
   const classes = useStyles();
-  const [scaleData, setScaleData] = useState({});
-  const [eventTimeStamp, setEventTimeStamp] = useState('');
-  const [eventType, setEventType] = useState('');
-  const isWebSerialSupported = SerialNCIScale.isWebSerialSupported();
+  const [eventData, setEventData] = useState({
+    scaleData: {},
+    eventTimeStamp: '',
+    eventType: '',
+  });
 
   const setData = ({detail, timeStamp, type}) => {
-    setScaleData(detail);
-    setEventTimeStamp(timeStamp);
-    setEventType(type);
+    setEventData({
+      scaleData: detail,
+      eventTimeStamp: timeStamp,
+      eventType: type,
+    });
   };
 
   useEffect(() => {
+    console.log('binding event handlers');
     scale.addEventListener('weight', setData);
     scale.addEventListener('status', setData);
     scale.addEventListener('settled', setData);
 
     return () => {
+      console.log('Unbinding event handlers');
       scale.removeEventListener('weight', setData);
       scale.removeEventListener('status', setData);
       scale.removeEventListener('settled', setData);
     };
-  });
+  }, []);
 
 
   return (
@@ -112,11 +118,11 @@ export default function App() {
             <Card className={classes.spaceTop}>
               <CardHeader
                 title="Event Log"
-                subheader={`Event '${eventType}' at time ${eventTimeStamp}`}
+                subheader={`Event '${eventData.eventType}' at time ${eventData.eventTimeStamp}`}
               />
               <CardContent>
                 <Typography variant="body1" display="block" component="div">
-                  <pre>{JSON.stringify(scaleData, null, 2) }</pre>
+                  <pre>{JSON.stringify(eventData.scaleData, null, 2) }</pre>
                 </Typography>
               </CardContent>
             </Card>

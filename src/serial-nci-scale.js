@@ -39,7 +39,6 @@ export default class SerialNCIScale extends EventTarget {
     this.filters = config.filters || [];
     this.portConfig = Object.assign({}, defaultPortConfig, config.portConfig);
     this.isConnected = false;
-    this.isDisconnecting = false;
     this.isPolling = false;
     this.lastSettled = Object.assign({}, eventDefaults);
     this.decoder = new TextDecoder('windows-1252');
@@ -64,33 +63,24 @@ export default class SerialNCIScale extends EventTarget {
     }
   }
 
-  // Disconnect gracefully
   async disconnect () {
     if (this.isConnected) {
-      this.isDisconnecting = true;
-
-      // One last query to unlock the reader before disconnecting
-      return this.getWeight().then(() => {
-        this.reader.releaseLock();
-        this.writer.releaseLock();
-        return this.port.close();
-      }).catch(e => console.error(e)).finally(() => {
-        this.isDisconnecting = false;
-        this.isConnected = false;
-      });
+      this.isConnected = false;
+      try {
+        await this.reader.cancel().then(() => this.reader.releaseLock());
+        await this.writer.abort().then(() => this.writer.releaseLock());
+        await this.port.close();
+      }
+      catch (e) {
+        console.error(e);
+      }
     }
-  }
-
-  onDataTransferError (e) {
-    console.error(e);
-    this.isConnected = false;
-    this.isDisconnecting = false;
   }
 
   send (data) {
     return this.initPort().then(() => {
       return this.writer.write(data).catch(e => {
-        this.onDataTransferError(e);
+        this.disconnect();
         throw e;
       });
     });
@@ -180,17 +170,19 @@ export default class SerialNCIScale extends EventTarget {
     }
   }
 
-  readLoop() {
-    this.reader.read().then(({ value, done }) => {
-
-      // Keep read loop open while connected
-      if (this.isConnected && !this.isDisconnecting) {
-        this.readLoop();
+  async readLoop() {
+    while (true) {
+      try {
+        const { value, done } = await this.reader.read();
+        if (done) { break; } // this.reader.cancel()
+        this.responseBuffer = Uint8Array.from([...this.responseBuffer, ...value]);
+        this.flushResponseBuffer();
       }
-
-      this.responseBuffer = Uint8Array.from([...this.responseBuffer, ...value]);
-      this.flushResponseBuffer();
-    }).catch(e => this.onDataTransferError(e));
+      catch (e) {
+        this.disconnect();
+        break;
+      }
+    }
   }
 
   startPolling() {
@@ -198,7 +190,7 @@ export default class SerialNCIScale extends EventTarget {
       this.initPort().then(() => {
         this.isPolling = true;
         const poll = setInterval(() => {
-          if (this.isConnected && this.isPolling && !this.isDisconnecting) { 
+          if (this.isConnected && this.isPolling) { 
             this.send(commands.weight);
           }
           else {
