@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 const commandChars = {
   CR:  parseInt('0d', 16), // Carriage Return
@@ -41,12 +43,15 @@ export default class SerialNCIScale extends EventTarget {
     this.isConnected = false;
     this.isPolling = false;
     this.lastSettled = Object.assign({}, eventDefaults);
-    this.decoder = new TextDecoder('windows-1252');
     this.responseBuffer = new Uint8Array();
   }
 
   static isWebSerialSupported() {
     return navigator && navigator.serial ? true : false;
+  }
+
+  decode (uint8Arr) {
+    return String.fromCharCode.apply(null, uint8Arr);
   }
 
   async initPort() {
@@ -145,8 +150,8 @@ export default class SerialNCIScale extends EventTarget {
         else if (etxIndex - crIndex === 3) {
           output.type = 'weight';
           output.status = this.parseStatus(this.responseBuffer.subarray(crIndex + 1, etxIndex));
-          output.units = this.decoder.decode(this.responseBuffer.subarray(crIndex - 2, crIndex)).trim();
-          output.weight = parseFloat(this.decoder.decode(this.responseBuffer.subarray(lfIndex + 1, crIndex - 2)).trim(), 10);
+          output.units = this.decode(this.responseBuffer.subarray(crIndex - 2, crIndex)).trim();
+          output.weight = parseFloat(this.decode(this.responseBuffer.subarray(lfIndex + 1, crIndex - 2)).trim(), 10);
         }
 
         else {

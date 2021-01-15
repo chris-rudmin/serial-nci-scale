@@ -1,6 +1,6 @@
 {
   "name": "serial-nci-scale",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "Serial interface for Salter Brecknell PS-USB scales using NCI protocol and SCP-12 layout",
   "main": "dist/serial-nci-scale.js",
   "files": [
@@ -106,7 +106,10 @@
     "workbox-webpack-plugin": "5.1.4",
     "@material-ui/core": "^4.11.2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "core-js": "^3.8.2",
+    "regenerator-runtime": "^0.13.7"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
