@@ -1,6 +1,6 @@
 {
   "name": "serial-nci-scale",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Serial interface for Salter Brecknell PS-USB scales using NCI protocol and SCP-12 layout",
   "main": "dist/serial-nci-scale.js",
   "files": [
@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "npm run build-dist && npm run build-example",
-    "build-dist": "npx babel --no-babelrc --plugins @babel/plugin-transform-runtime src/serial-nci-scale.js --out-file dist/serial-nci-scale.js --presets=@babel/preset-env",
+    "build-dist": "npx babel --no-babelrc src/serial-nci-scale.js --out-file dist/serial-nci-scale.js --presets=@babel/preset-env",
     "start": "node scripts/start.js",
     "build-example": "node scripts/build.js && rm -rf docs && mv build docs",
     "test": "node scripts/test.js"
