@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/serial-nci-scale/static/js/main.c6a803a9.chunk.js",
-    "main.js.map": "/serial-nci-scale/static/js/main.c6a803a9.chunk.js.map",
-    "runtime-main.js": "/serial-nci-scale/static/js/runtime-main.29f2a971.js",
-    "runtime-main.js.map": "/serial-nci-scale/static/js/runtime-main.29f2a971.js.map",
-    "static/js/2.47c9f363.chunk.js": "/serial-nci-scale/static/js/2.47c9f363.chunk.js",
-    "static/js/2.47c9f363.chunk.js.map": "/serial-nci-scale/static/js/2.47c9f363.chunk.js.map",
-    "static/js/3.db8c7b87.chunk.js": "/serial-nci-scale/static/js/3.db8c7b87.chunk.js",
-    "static/js/3.db8c7b87.chunk.js.map": "/serial-nci-scale/static/js/3.db8c7b87.chunk.js.map",
+    "main.js": "/serial-nci-scale/static/js/main.c7617a47.chunk.js",
+    "main.js.map": "/serial-nci-scale/static/js/main.c7617a47.chunk.js.map",
+    "runtime-main.js": "/serial-nci-scale/static/js/runtime-main.65a908c8.js",
+    "runtime-main.js.map": "/serial-nci-scale/static/js/runtime-main.65a908c8.js.map",
+    "static/js/2.676ddd2a.chunk.js": "/serial-nci-scale/static/js/2.676ddd2a.chunk.js",
+    "static/js/2.676ddd2a.chunk.js.map": "/serial-nci-scale/static/js/2.676ddd2a.chunk.js.map",
+    "static/js/3.67483545.chunk.js": "/serial-nci-scale/static/js/3.67483545.chunk.js",
+    "static/js/3.67483545.chunk.js.map": "/serial-nci-scale/static/js/3.67483545.chunk.js.map",
     "index.html": "/serial-nci-scale/index.html",
-    "static/js/2.47c9f363.chunk.js.LICENSE.txt": "/serial-nci-scale/static/js/2.47c9f363.chunk.js.LICENSE.txt"
+    "static/js/2.676ddd2a.chunk.js.LICENSE.txt": "/serial-nci-scale/static/js/2.676ddd2a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.29f2a971.js",
-    "static/js/2.47c9f363.chunk.js",
-    "static/js/main.c6a803a9.chunk.js"
+    "static/js/runtime-main.65a908c8.js",
+    "static/js/2.676ddd2a.chunk.js",
+    "static/js/main.c7617a47.chunk.js"
   ]
 }

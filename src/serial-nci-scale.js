@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 const commandChars = {
   CR:  parseInt('0d', 16), // Carriage Return
