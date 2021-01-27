@@ -46,25 +46,18 @@ export default class SerialNCIScale extends EventTarget {
     this.responseBuffer = new Uint8Array();
   }
 
-  static isWebSerialSupported() {
-    return navigator && navigator.serial ? true : false;
-  }
-
   decode (uint8Arr) {
     return String.fromCharCode.apply(null, uint8Arr);
   }
 
   async initPort() {
     if (!this.isConnected) {
-      return navigator.serial.requestPort({ filters: this.filters }).then(port => {
-        this.port = port;
-        return this.port.open(this.portConfig);
-       }).then(() => {
-        this.reader = this.port.readable.getReader();
-        this.writer = this.port.writable.getWriter();
-        this.isConnected = true;
-        this.readLoop();
-      });
+      this.port = await navigator.serial.requestPort({ filters: this.filters })
+      await this.port.open(this.portConfig);
+      this.reader = this.port.readable.getReader();
+      this.writer = this.port.writable.getWriter();
+      this.isConnected = true;
+      this.readLoop();
     }
   }
 
@@ -72,8 +65,10 @@ export default class SerialNCIScale extends EventTarget {
     if (this.isConnected) {
       this.isConnected = false;
       try {
-        await this.reader.cancel().then(() => this.reader.releaseLock());
-        await this.writer.abort().then(() => this.writer.releaseLock());
+        await this.reader.cancel();
+        this.reader.releaseLock();
+        await this.writer.abort();
+        this.writer.releaseLock();
         await this.port.close();
       }
       catch (e) {
@@ -123,6 +118,7 @@ export default class SerialNCIScale extends EventTarget {
 
     // discard anything preceeding <LF> and process again
     if (lfIndex > 0) {
+      console.warn('Partial data received. Flushing.');
       this.responseBuffer = this.responseBuffer.slice(lfIndex);
       return this.flushResponseBuffer();
     }
@@ -190,20 +186,19 @@ export default class SerialNCIScale extends EventTarget {
     }
   }
 
-  startPolling() {
+  async startPolling() {
     if (!this.isPolling) {
-      this.initPort().then(() => {
-        this.isPolling = true;
-        const poll = setInterval(() => {
-          if (this.isConnected && this.isPolling) { 
-            this.send(commands.weight);
-          }
-          else {
-            clearInterval(poll);
-            this.isPolling = false;
-          }
-        }, 500);
-      });
+      await this.initPort();
+      this.isPolling = true;
+      const poll = setInterval(() => {
+        if (this.isConnected && this.isPolling) {
+          this.send(commands.weight);
+        }
+        else {
+          clearInterval(poll);
+          this.isPolling = false;
+        }
+      }, 500);
     }
   }
 
@@ -236,9 +231,10 @@ export default class SerialNCIScale extends EventTarget {
   zero() {
     return this.send(commands.zero);
   }
-};
+}
 
 
+SerialNCIScale.isWebSerialSupported = navigator && navigator.serial ? true : false;
 SerialNCIScale.supportedScaleFilters = [
   { usbVendorId: 0x1A86, usbProductId: 0x7523 }, // CH340 serial converter
-]
+];

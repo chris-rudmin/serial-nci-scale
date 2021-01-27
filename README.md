@@ -41,10 +41,11 @@ const { weight, units, status } = await scale.getWeight();
 
 #### Static Methods
 
-- `SerialNCIScale.isWebSerialSupported()` - Returns `true` if Web Serial API exists in your browser.
+- 
 
 #### Static Attributes
 
+- `SerialNCIScale.isWebSerialSupported` - `true` if Web Serial API exists in your browser
 - `SerialNCIScale.supportedScaleFilters` - Array of devices which are known to be supported
 
 #### Events
