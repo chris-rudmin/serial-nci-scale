@@ -234,7 +234,7 @@ export default class SerialNCIScale extends EventTarget {
 }
 
 
-SerialNCIScale.isWebSerialSupported = navigator && navigator.serial ? true : false;
+SerialNCIScale.isWebSerialSupported = (navigator && navigator.serial) ? true : false;
 SerialNCIScale.supportedScaleFilters = [
   { usbVendorId: 0x1A86, usbProductId: 0x7523 }, // CH340 serial converter
 ];
