@@ -13,7 +13,6 @@ import Divider from '@material-ui/core/Divider';
 
 
 const scale = new SerialNCIScale();
-const isWebSerialSupported = SerialNCIScale.isWebSerialSupported();
 const useStyles = makeStyles(theme => ({
   button: {
     marginTop: theme.spacing(2),
@@ -85,7 +84,7 @@ export default function App() {
 
         <Divider className={classes.spaceTop}/>
 
-        { isWebSerialSupported ? (
+        { SerialNCIScale.isWebSerialSupported ? (
           <div>
             <Typography variant="h5" gutterBottom className={classes.spaceTop}>
               Controls
