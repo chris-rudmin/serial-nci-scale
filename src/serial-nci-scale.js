@@ -186,7 +186,7 @@ export default class SerialNCIScale extends EventTarget {
     }
   }
 
-  async startPolling() {
+  async startPolling(pollInterval = 500) {
     if (!this.isPolling) {
       await this.initPort();
       this.isPolling = true;
@@ -198,7 +198,7 @@ export default class SerialNCIScale extends EventTarget {
           clearInterval(poll);
           this.isPolling = false;
         }
-      }, 500);
+      }, pollInterval);
     }
   }
 

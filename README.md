@@ -35,13 +35,9 @@ const { weight, units, status } = await scale.getWeight();
 - `scale.getWeight()` - Returns a promise which resolves with scale weight data. Required to be called from user action
 - `scale.getStatus()` - Returns a promise which resolves with scale status data. Required to be called from user action
 - `scale.zero()` - Returns a promise which resolves when the scale is zeroed. Required to be called from user action
-- `scale.startPolling()` - Starts polling the scale for weight data every 500ms. Required to be called from user action
+- `scale.startPolling([pollInterval])` - Starts polling the scale for weight data. Default polling interval is 500 ms Required to be called from user action
 - `scale.stopPolling()` - Stops polling the scale
 - `scale.disconnect()` - Returns a promise which resolves once disconnected. Closes the read and write streams and frees the serial port
-
-#### Static Methods
-
-- 
 
 #### Static Attributes
 
@@ -63,5 +59,5 @@ scale.startPolling();
 
 ### Supported Browsers
 
-Currently only Chrome 89+ supports the Web Serial API.
-Earlier versions of Chrome can use the API if it is enabled in chrome://flags
+Currently only Chrome 89+ and Edge 89+ support the Web Serial API.
+Earlier versions of Chrome and Edge can use the API if it is enabled in chrome://flags

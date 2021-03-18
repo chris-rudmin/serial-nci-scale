@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/serial-nci-scale/static/js/main.2c2e40de.chunk.js",
-    "main.js.map": "/serial-nci-scale/static/js/main.2c2e40de.chunk.js.map",
+    "main.js": "/serial-nci-scale/static/js/main.5d37a15e.chunk.js",
+    "main.js.map": "/serial-nci-scale/static/js/main.5d37a15e.chunk.js.map",
     "runtime-main.js": "/serial-nci-scale/static/js/runtime-main.65a908c8.js",
     "runtime-main.js.map": "/serial-nci-scale/static/js/runtime-main.65a908c8.js.map",
     "static/js/2.786f3a79.chunk.js": "/serial-nci-scale/static/js/2.786f3a79.chunk.js",
@@ -14,6 +14,6 @@
   "entrypoints": [
     "static/js/runtime-main.65a908c8.js",
     "static/js/2.786f3a79.chunk.js",
-    "static/js/main.2c2e40de.chunk.js"
+    "static/js/main.5d37a15e.chunk.js"
   ]
 }
