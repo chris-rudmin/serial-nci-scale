@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/serial-nci-scale/static/js/main.5d37a15e.chunk.js",
-    "main.js.map": "/serial-nci-scale/static/js/main.5d37a15e.chunk.js.map",
+    "main.js": "/serial-nci-scale/static/js/main.2587b8e2.chunk.js",
+    "main.js.map": "/serial-nci-scale/static/js/main.2587b8e2.chunk.js.map",
     "runtime-main.js": "/serial-nci-scale/static/js/runtime-main.65a908c8.js",
     "runtime-main.js.map": "/serial-nci-scale/static/js/runtime-main.65a908c8.js.map",
-    "static/js/2.786f3a79.chunk.js": "/serial-nci-scale/static/js/2.786f3a79.chunk.js",
-    "static/js/2.786f3a79.chunk.js.map": "/serial-nci-scale/static/js/2.786f3a79.chunk.js.map",
+    "static/js/2.8f390a53.chunk.js": "/serial-nci-scale/static/js/2.8f390a53.chunk.js",
+    "static/js/2.8f390a53.chunk.js.map": "/serial-nci-scale/static/js/2.8f390a53.chunk.js.map",
     "static/js/3.67483545.chunk.js": "/serial-nci-scale/static/js/3.67483545.chunk.js",
     "static/js/3.67483545.chunk.js.map": "/serial-nci-scale/static/js/3.67483545.chunk.js.map",
     "index.html": "/serial-nci-scale/index.html",
-    "static/js/2.786f3a79.chunk.js.LICENSE.txt": "/serial-nci-scale/static/js/2.786f3a79.chunk.js.LICENSE.txt"
+    "static/js/2.8f390a53.chunk.js.LICENSE.txt": "/serial-nci-scale/static/js/2.8f390a53.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.65a908c8.js",
-    "static/js/2.786f3a79.chunk.js",
-    "static/js/main.5d37a15e.chunk.js"
+    "static/js/2.8f390a53.chunk.js",
+    "static/js/main.2587b8e2.chunk.js"
   ]
 }

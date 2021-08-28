@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
   },
   spaceTop: {
     marginTop: theme.spacing(4),
+  },
+  lead: {
+    marginBottom: theme.spacing(2),
   }
 }));
 
@@ -69,9 +72,13 @@ export default function App() {
           Connect Your Scale!
         </Typography>
 
-        <Typography variant="body1" display="block">
-          To test the serial-nci-scale library, be sure to enable the Web Serial API in chrome://flags and connect your scale.
+        <Typography variant="body1" display="block" className={classes.lead}>
+          To test the serial-nci-scale library, be sure to use chrome v89+ and connect your scale.
           USB scales will need the appropriate VCP driver on Windows to virtualize a serial port.
+        </Typography>
+        <Typography variant="body1" display="block" className={classes.lead}>
+          If your scale registers as a HID device and does not appear in the available devices prompt, 
+          on Windows you can install a generic USB driver using <a href="https://zadig.akeo.ie/">Zadig</a> to make the device available in Chrome.
         </Typography>
 
         <Typography variant="h5" gutterBottom className={classes.spaceTop}>
